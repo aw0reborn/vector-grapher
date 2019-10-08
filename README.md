@@ -1,4 +1,4 @@
-# Victor Grapher
+# Vector Grapher
 
 Vector Grapher is a project based on FLTK and OpenGL,
 A user will enter the coordinates and it will generate a 3D Graph!
