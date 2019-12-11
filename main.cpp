@@ -13,15 +13,14 @@
 #include <FL/glut.H>
 #include <FL/Fl_Double_Window.H>
 #include <GL/glu.h>
-#include <function.cpp>
-#include <fstream>
+#include "function.cpp"
 
 using namespace std;
 
 #include <cmath>
 
 class MyGlWindow : public Fl_Gl_Window {
-  void computeCurve();
+
   void draw();
   int handle(int e) {
     static int x, y;
@@ -68,12 +67,13 @@ class MyGlWindow : public Fl_Gl_Window {
 
 public:
 	float r,g,b;
-	MyGlWindow(int x, int y, int w, int h) :
+	MyGlWindow(int x=0, int y=0, int w=0, int h=0) :
 	  Fl_Gl_Window(x,y,w,h,"My GL Window")
 	  {
 		  r = g = 1;
 		  b = 0;
 	 }
+ void computeCurve();
  };
 
  /**********************************************************************************************************************************/
@@ -99,27 +99,13 @@ public:
  /**********************************************************************************************************************************/
 
  void MyGlWindow::computeCurve() {
-   int maxBalls    = 5000;
-   double tDelta   = 0.01;
-   double x = 0.11;
-   double y = 0.0;
-   double z = 0;
-   double a = 10;
-   double b = 28;
-   double c = 8.0 / 3.0;
-   int numBalls;
-   double xNew, yNew, zNew;
-
    glNewList(1, GL_COMPILE);
    glColor3f(1,1,1);
    glPointSize(0.1);
-   glBegin(GL_LINE_STRIP);
-
-   GLfloat ang, x1, y1, z1 = -100;
    glClear(GL_COLOR_BUFFER_BIT);
    glPushMatrix();
    glColor3f(1,0,0);
-   glBegin(GL_POINTS);
+   glBegin(GL_LINE_STRIP);
    fstream infile;
    infile.open("file.txt",ios::in);
    while(!infile.eof()) {
@@ -129,12 +115,11 @@ public:
      infile>>x;
      infile>>y;
      infile>>z;
-     //cout<<x<<endl;
+     cout<<x<< endl;
      glVertex3f(x,y,z);
    }
-
-   glEnd();
-   glEnd();
+     glEnd();
+     redraw();
 
  // Draw the x/y/z axis
    glBegin(GL_LINE_STRIP);
@@ -159,18 +144,17 @@ Fl_Input *xAxis;
 Fl_Input *yAxis;
 Fl_Input *zAxis;
  void genGraphfun(Fl_Widget*w) {
-   cout << "The Button Was Clicked!.." << endl;
+   cout << "Generating Graph..." << endl;
    string strX,strY,strZ;
    strX = xAxis->value();
    strY = yAxis->value();
    strZ = zAxis->value();
-   point a;
-   point b;
-   point c;
-   point p;
+   point a,b,c,p;
    p.generate(a,b,c,strX,strY,strZ);
- 	 p.makingPointsFile(a,b,c,-100,100);
-   computeCurve();
+   p.makingPointsFile(a,b,c,-1000,1000);
+   MyGlWindow ptr;
+   ptr.computeCurve();
+
  }
 int main(int argc, char **argv) {
 
